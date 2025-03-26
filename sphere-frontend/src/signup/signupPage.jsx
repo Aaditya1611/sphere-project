@@ -3,6 +3,8 @@ import BGimg from "../assets/loginpageBG.jpeg";
 import { Link } from "react-router-dom";
 import axios from 'axios';
 
+const API_URL = "http://localhost:8080"
+
 const Signup = () => {
 
     const[formData, setFormData] = useState({
@@ -26,14 +28,12 @@ const Signup = () => {
 
         e.preventDefault();
         try{
-            const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/signup`, formData);
+            const response = await axios.post(API_URL + "/signup", formData);
             if(response.status >= 200 && response.status < 300){
                 setSignupSuccess(true);
-            } else{
-                setErrorMsg(true);
-            }
+            } 
         }catch(error){
-            console.error('Signup Failed: ', error)
+            setErrorMsg(true);
         }
         setFormData({  //resets the form data after a successful submission
             email: '',
@@ -56,6 +56,7 @@ const Signup = () => {
                     <div className="mt-5">
                         <label htmlFor="email id"></label>
                         <input className="bg-white w-[25rem] h-[3rem] rounded-full p-5"
+                            required
                             type="text"
                             id="email"
                             name="email"
@@ -67,6 +68,7 @@ const Signup = () => {
                     <div className="mt-3">
                         <label htmlFor="email id"></label>
                         <input className="bg-white w-[25rem] h-[3rem] rounded-full p-5"
+                            required
                             type="text"
                             id="username"
                             name="username"
@@ -78,6 +80,7 @@ const Signup = () => {
                     <div className="mt-3">
                         <label htmlFor="email id"></label>
                         <input className="bg-white w-[25rem] h-[3rem] rounded-full p-5"
+                            required
                             type="password"
                             id="password"
                             name="password"
@@ -86,6 +89,9 @@ const Signup = () => {
                             onChange={handleChange}
                         />
                     </div>
+                    {errorMsg && (
+                    <h1 className="text-md text-red-600 mt-3">This username or email is already registered</h1>
+                )}
                     <button type="submit" className="w-[20rem] h-[3rem] bg-blue-500 rounded-full mt-5">Create account</button>
                 </form>
                 {signupSuccess && (
@@ -93,9 +99,6 @@ const Signup = () => {
                      <p className="text-md text-blue-700">Account created Successfully</p>
                      <Link to="/" className="text-md text-black underline">Login Now.</Link>
                  </div>
-                )}
-                {errorMsg && (
-                    <h1 className="text-sm text-red-600">An error has occured, please try again later</h1>
                 )}
             </div>
         </div>
