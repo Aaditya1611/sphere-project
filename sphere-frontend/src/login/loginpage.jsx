@@ -1,6 +1,10 @@
 import BGimg from "../assets/loginpageBG.jpeg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import React, { useState } from "react";
+import axios from "axios";
+
+
+const API_URL = "http://localhost:8080"
 
 const Login = () => {
 
@@ -8,6 +12,10 @@ const Login = () => {
         username: '',
         password: '',
     });
+
+    const [errorMessage, setErrorMessage] = useState(false);
+
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -17,16 +25,35 @@ const Login = () => {
         }))
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        //You can send the form data to an API or perform other action here
-
+        try {
+            const response = await axios.post(API_URL + "/login", formData)
+            if (response.data.accessToken) {
+                localStorage.setItem('user', JSON.stringify(response.data)); //Store JWT
+                console.log("response.data.token:", response.data.accessToken);
+                navigate('/homepage')
+            } else {
+                console.warn("login successful but no token recieved")
+            }
+        } catch (error) {
+            console.error('Login failed: ', error);
+            setErrorMessage(true);
+        }
         //resets the form after submission
         setFormData({
             username: '',
             password: '',
         })
+    }
+
+    const logout = () => {
+        localStorage.removeItem('user'); // removes the JWT
+    }
+
+    const getCurrentUser = () => {
+        return JSON.parse(localStorage.getItem('user'));
     }
 
     return (
@@ -42,7 +69,7 @@ const Login = () => {
                 <div className="flex flex-col items-center">
                     <h1 className="text-5xl font-semibold">Welcome Back</h1>
                     <p className="text-md mt-3 text-neutral-800">Enter your unique account details </p>
-                    <form className="flex flex-col items-center">
+                    <form className="flex flex-col items-center" onSubmit={handleSubmit}>
                         <div className="mt-5">
                             <label htmlFor="username"></label>
                             <input className="bg-white w-[25rem] h-[3rem] rounded-full p-5"
@@ -65,12 +92,15 @@ const Login = () => {
                                 onChange={handleChange}
                             />
                         </div>
-                        <Link to="/forgotpasswd" className="text-sm underline my-5">Forgot Password?</Link>
-                        <button className="w-[25rem] h-[3rem] bg-blue-500 text-white rounded-full" type="submit">Log In</button>
+                        {errorMessage && (
+                        <div className="py-5">
+                            <p className="text-md text-red-600">Incorrect username or password</p>
+                        </div>
+                    )
+                    }
+                        <Link to="/forgotpasswd" className="text-sm underline mb-5">Forgot Password?</Link>
+                        <button className="w-[25rem] h-[3rem] bg-blue-500 text-white rounded-full cursor-pointer" type="submit">Log In</button>
                     </form>
-                    <div className="py-5">
-                        <p className="text-md text-red-700">Invalid username or password</p>
-                    </div>
                 </div>
             </div>
         </div>
