@@ -1,34 +1,34 @@
-// package com.chatapp.web.login;
-// import java.util.Collection;
-// import java.util.Collections;
-// import org.springframework.security.core.GrantedAuthority;
-// import org.springframework.security.core.authority.SimpleGrantedAuthority;
-// import org.springframework.security.core.userdetails.UserDetails;
+package com.chatapp.web.login;
+import java.util.Collection;
+import java.util.Collections;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-// public class UserDetailsImplementation implements UserDetails{
+public class UserDetailsImplementation implements UserDetails{
 
-// 	private User user;
+	private User user;
 	
-// 	public UserDetailsImplementation(User user) {
-// 		super();
-// 		this.user = user;
-// 	}
+	public UserDetailsImplementation(User user) {
+		super();
+		this.user = user;
+	}
 
-// 	@Override
-// 	public Collection<? extends GrantedAuthority> getAuthorities() {
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
 		
-// 		return Collections.singleton(new SimpleGrantedAuthority("USER"));
-// 	}
+		return Collections.singleton(new SimpleGrantedAuthority("USER"));
+	}
 
-// 	@Override
-// 	public String getPassword() {
+	@Override
+	public String getPassword() {
 		
-// 		return user.getPassword();
-// 	}
+		return user.getPassword();
+	}
 
-// 	@Override
-// 	public String getUsername() {
+	@Override
+	public String getUsername() {
 		
-// 		return user.getUsername();
-// 	}
-// }
+		return user.getUsername();
+	}
+}
